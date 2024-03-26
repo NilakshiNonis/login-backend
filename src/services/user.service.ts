@@ -48,8 +48,16 @@ export class UserService {
   }
 
   static async updateUser(id: string, name: string, email: string): Promise <User | null>{
-    const task = await this.getUserById(id);
-    return task.update({name, email});
+    const user = await this.getUserById(id);
+    return user.update({name, email});
+}
+
+static async deleteUser(id: string): Promise<number> {
+  return await User.destroy({
+    where: {
+      id: id,
+    },
+  });
 }
 
 }
