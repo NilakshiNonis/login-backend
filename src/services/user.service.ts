@@ -47,4 +47,9 @@ export class UserService {
       });
   }
 
+  static async updateUser(id: string, name: string, email: string): Promise <User | null>{
+    const task = await this.getUserById(id);
+    return task.update({name, email});
+}
+
 }

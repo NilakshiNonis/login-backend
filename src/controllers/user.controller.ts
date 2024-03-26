@@ -46,7 +46,7 @@ class UserController {
         id: addedUser.id,
         email: addedUser.email,
         name: addedUser.name,
-        role: addedUser.role
+        role: addedUser.role,
       };
       const token = signAccessToken(userData);
       const refreshToken = await signRefreshToken(userData);
@@ -88,7 +88,7 @@ class UserController {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
       };
       const token = signAccessToken(userData);
       const refreshToken = await signRefreshToken(userData);
@@ -144,6 +144,22 @@ class UserController {
     }
   }
 
+  static async updateUser(request: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = request.params;
+      const { name, email } = request.body;
+
+      const updatedUser = await UserService.updateUser(id, name, email);
+      return res
+        .status(200)
+        .json(OperationResult.success(updatedUser, SuccessMessage.USER_UPDATE));
+    } catch {
+      return res
+        .status(500)
+        .json(OperationResult.failed(500, ErrorMessages.INTERNAL_SERVER_ERROR));
+    }
+  }
+
   static async generateRefreshToken(
     request: Request,
     res: Response,
@@ -168,7 +184,7 @@ class UserController {
         id: tokenData.data.id,
         email: tokenData.data.email,
         name: tokenData.data.name,
-        role: tokenData.data.role
+        role: tokenData.data.role,
       };
       const token = signAccessToken(userData);
       const refreshToken = await signRefreshToken(userData);
@@ -203,16 +219,18 @@ class UserController {
     }
   }
 
-  static async getAllUsers(request: Request, res: Response, next: NextFunction){
+  static async getAllUsers(
+    request: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-        const users = await UserService.getAllUsers();
-        return res.status(200).json(OperationResult.success(users));
-    }
-    catch {
-        return res
+      const users = await UserService.getAllUsers();
+      return res.status(200).json(OperationResult.success(users));
+    } catch {
+      return res
         .status(500)
         .json(OperationResult.failed(500, ErrorMessages.INTERNAL_SERVER_ERROR));
-
     }
   }
 }
