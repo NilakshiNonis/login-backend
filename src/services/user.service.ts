@@ -42,7 +42,7 @@ export class UserService {
   static async getAllUsers(): Promise<User[]> {
       return await User.findAll({
         where: {
-          role: Role.NORMAL
+          role: Role.USER
         }
       });
   }

@@ -32,6 +32,7 @@ class UserController {
       const payload = {
         email,
         name,
+        role: "USER",
         password: crypto
           .createHmac("sha256", process.env.PASSWORD_SECRET_KEY)
           .update(password)
@@ -52,9 +53,16 @@ class UserController {
       const refreshToken = await signRefreshToken(userData);
       return res.status(200).json(
         OperationResult.success({
-          ...userData,
-          access_token: token,
-          refresh_token: refreshToken,
+          user: userData,
+          backendTokens:{
+            token: token,
+            refreshToken: refreshToken,
+            expiresIn: new Date().setTime(
+              new Date().getTime() +
+                  1000 * Number(process.env.ACCESS_TOKEN_LIFE),
+          )
+          }
+          
         })
       );
     } catch (error) {
@@ -94,9 +102,15 @@ class UserController {
       const refreshToken = await signRefreshToken(userData);
       return res.status(200).json(
         OperationResult.success({
-          ...userData,
-          access_token: token,
-          refresh_token: refreshToken,
+          user: userData,
+          backendTokens:{
+            token: token,
+            refreshToken: refreshToken,
+            expiresIn: new Date().setTime(
+              new Date().getTime() +
+                  1000 * Number(process.env.ACCESS_TOKEN_LIFE),
+          )
+          }
         })
       );
     } catch (error) {

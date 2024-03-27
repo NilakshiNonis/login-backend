@@ -8,6 +8,12 @@ import { Role } from "../utils/enum";
 export const userApisRoutes = Router();
 
 userApisRoutes.post(
+  "/",
+  ValidateSchema.prepare(userSchema.registerSchema),
+  UserController.registerUser
+);
+
+userApisRoutes.post(
   "/login",
   ValidateSchema.prepare(userSchema.loginSchema),
   UserController.loginUser
@@ -15,6 +21,7 @@ userApisRoutes.post(
 
 userApisRoutes.post(
   "/logout",
+  checkAuthorization([Role.ADMIN, Role.USER]),
   ValidateSchema.prepare(userSchema.refreshTokenSchema),
   UserController.logoutUser
 );
@@ -27,10 +34,24 @@ userApisRoutes.post(
 
 userApisRoutes.get(
   "/me",
-  checkAuthorization([Role.ADMIN, Role.NORMAL]),
+  checkAuthorization([Role.ADMIN, Role.USER]),
   UserController.getUser
 );
 
-userApisRoutes.get("/all", checkAuthorization(Role.NORMAL), UserController.getAllUsers)
+userApisRoutes.get(
+  "/all",
+  checkAuthorization(Role.ADMIN),
+  UserController.getAllUsers
+);
 
+userApisRoutes.delete(
+  "/:id",
+  checkAuthorization(Role.ADMIN),
+  UserController.deleteUser
+);
 
+userApisRoutes.put(
+  "/:id",
+  checkAuthorization(Role.ADMIN),
+  UserController.updateUser
+);
