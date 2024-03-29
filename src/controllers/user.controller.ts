@@ -161,9 +161,9 @@ class UserController {
   static async updateUser(request: Request, res: Response, next: NextFunction) {
     try {
       const { id } = request.params;
-      const { name, email } = request.body;
+      const { name } = request.body;
 
-      const updatedUser = await UserService.updateUser(id, name, email);
+      const updatedUser = await UserService.updateUser(id, name);
       return res
         .status(200)
         .json(OperationResult.success(updatedUser, SuccessMessage.USER_UPDATE));
@@ -221,6 +221,21 @@ class UserController {
   static async getUser(request: Request, res: Response, next: NextFunction) {
     try {
       const { id } = request.user;
+
+      const user = await UserService.getUserById(id);
+
+      return res.status(200).json(OperationResult.success(user));
+    } catch (error) {
+      console.log("err>>", error);
+      return res
+        .status(500)
+        .json(OperationResult.failed(500, ErrorMessages.INTERNAL_SERVER_ERROR));
+    }
+  }
+
+  static async getUserDetails(request: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = request.params;
 
       const user = await UserService.getUserById(id);
 

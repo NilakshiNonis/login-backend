@@ -50,8 +50,15 @@ userApisRoutes.delete(
   UserController.deleteUser
 );
 
+userApisRoutes.get(
+  "/details/:id",
+  checkAuthorization(Role.ADMIN),
+  UserController.getUserDetails
+);
+
 userApisRoutes.put(
   "/:id",
   checkAuthorization(Role.ADMIN),
+  ValidateSchema.prepare(userSchema.updateSchema),
   UserController.updateUser
 );

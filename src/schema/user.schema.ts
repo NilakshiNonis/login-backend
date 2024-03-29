@@ -15,8 +15,13 @@ const registerSchema = Joi.object({
     password: Joi.string().required()
 })
 
+const updateSchema = Joi.object({
+    name: Joi.string().required(),
+})
+
 export default {
     loginSchema,
     refreshTokenSchema,
-    registerSchema
+    registerSchema,
+    updateSchema
 }

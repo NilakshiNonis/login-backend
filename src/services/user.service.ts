@@ -41,15 +41,16 @@ export class UserService {
 
   static async getAllUsers(): Promise<User[]> {
       return await User.findAll({
+        attributes: {exclude: ['password']},
         where: {
           role: Role.USER
         }
       });
   }
 
-  static async updateUser(id: string, name: string, email: string): Promise <User | null>{
+  static async updateUser(id: string, name: string): Promise <User | null>{
     const user = await this.getUserById(id);
-    return user.update({name, email});
+    return user.update({name});
 }
 
 static async deleteUser(id: string): Promise<number> {
