@@ -33,7 +33,7 @@ export class User extends Model<User> {
     allowNull: false,
   })
   role!: Role;
-  
+
   @Column({
     type: DataType.INTEGER,
   })
@@ -44,4 +44,10 @@ export class User extends Model<User> {
     allowNull: false,
   })
   created_at?: number;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  telephone?: string;
 }

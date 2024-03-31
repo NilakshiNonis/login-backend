@@ -22,7 +22,7 @@ class UserController {
     next: NextFunction
   ) {
     try {
-      const { email, name, password } = request.body;
+      const { email, name, password} = request.body;
       const user = await UserService.getUserByEmail(email);
       if (user)
         return res
@@ -40,6 +40,7 @@ class UserController {
         id: uuidv4(),
         created_at: moment().unix(),
         updated_at: moment().unix(),
+        telephone: ""
       };
       const addedUser = await UserService.createUser(payload as User);
 
@@ -161,9 +162,9 @@ class UserController {
   static async updateUser(request: Request, res: Response, next: NextFunction) {
     try {
       const { id } = request.params;
-      const { name } = request.body;
+      const { name, telephone } = request.body;
 
-      const updatedUser = await UserService.updateUser(id, name);
+      const updatedUser = await UserService.updateUser(id, name, telephone);
       return res
         .status(200)
         .json(OperationResult.success(updatedUser, SuccessMessage.USER_UPDATE));

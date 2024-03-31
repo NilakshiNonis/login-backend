@@ -32,7 +32,7 @@ export class UserService {
    */
   static async getUserById(id: string): Promise<User | null> {
     return await User.findOne({
-      attributes:["id", "name", "email"],
+      attributes:["id", "name", "email", "telephone"],
       where: {
         id: id,
       },
@@ -48,9 +48,9 @@ export class UserService {
       });
   }
 
-  static async updateUser(id: string, name: string): Promise <User | null>{
+  static async updateUser(id: string, name: string, telephone: string): Promise <User | null>{
     const user = await this.getUserById(id);
-    return user.update({name});
+    return user.update({name, telephone});
 }
 
 static async deleteUser(id: string): Promise<number> {

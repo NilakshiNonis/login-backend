@@ -12,11 +12,12 @@ const refreshTokenSchema = Joi.object({
 const registerSchema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
 })
 
 const updateSchema = Joi.object({
     name: Joi.string().required(),
+    telephone:Joi.string()
 })
 
 export default {
