@@ -22,7 +22,7 @@ class UserController {
     next: NextFunction
   ) {
     try {
-      const { email, name, password} = request.body;
+      const { email, name, password } = request.body;
       const user = await UserService.getUserByEmail(email);
       if (user)
         return res
@@ -40,7 +40,7 @@ class UserController {
         id: uuidv4(),
         created_at: moment().unix(),
         updated_at: moment().unix(),
-        telephone: ""
+        telephone: "",
       };
       const addedUser = await UserService.createUser(payload as User);
 
@@ -50,20 +50,10 @@ class UserController {
         name: addedUser.name,
         role: addedUser.role,
       };
-      const token = signAccessToken(userData);
-      const refreshToken = await signRefreshToken(userData);
+      
       return res.status(200).json(
         OperationResult.success({
           user: userData,
-          backendTokens:{
-            token: token,
-            refreshToken: refreshToken,
-            expiresIn: new Date().setTime(
-              new Date().getTime() +
-                  1000 * Number(process.env.ACCESS_TOKEN_LIFE),
-          )
-          }
-          
         })
       );
     } catch (error) {
@@ -91,7 +81,12 @@ class UserController {
       if (passwordHash != user.password)
         return res
           .status(401)
-          .json(OperationResult.failed(401, ErrorMessages.INCORRECT_PASSWORD));
+          .json(
+            OperationResult.failed(
+              401,
+              ErrorMessages.INCORRECT_USERNAME_PASSWORD
+            )
+          );
 
       const userData: IUserToken = {
         id: user.id,
@@ -104,14 +99,14 @@ class UserController {
       return res.status(200).json(
         OperationResult.success({
           user: userData,
-          backendTokens:{
+          backendTokens: {
             token: token,
             refreshToken: refreshToken,
             expiresIn: new Date().setTime(
               new Date().getTime() +
-                  1000 * Number(process.env.ACCESS_TOKEN_LIFE),
-          )
-          }
+                1000 * Number(process.env.ACCESS_TOKEN_LIFE)
+            ),
+          },
         })
       );
     } catch (error) {
@@ -206,9 +201,15 @@ class UserController {
 
       return res.status(200).json(
         OperationResult.success({
-          ...userData,
-          access_token: token,
-          refresh_token: refreshToken,
+          user: userData,
+          backendTokens: {
+            token: token,
+            refreshToken: refreshToken,
+            expiresIn: new Date().setTime(
+              new Date().getTime() +
+                1000 * Number(process.env.ACCESS_TOKEN_LIFE)
+            ),
+          },
         })
       );
     } catch (error) {
@@ -234,7 +235,11 @@ class UserController {
     }
   }
 
-  static async getUserDetails(request: Request, res: Response, next: NextFunction) {
+  static async getUserDetails(
+    request: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { id } = request.params;
 
@@ -270,9 +275,7 @@ class UserController {
       await UserService.deleteUser(id);
       return res
         .status(200)
-        .json(
-          OperationResult.success(id, SuccessMessage.DELETE_SUCCESSFUL)
-        );
+        .json(OperationResult.success(id, SuccessMessage.DELETE_SUCCESSFUL));
     } catch {
       return res
         .status(500)

@@ -10,4 +10,5 @@ export const ErrorMessages = Object.assign({
     USER_EXIST: 'User already exists',
     INCORRECT_PASSWORD: 'Incorrect Password',
     INCORRECT_CURRENT_PASSWORD: 'Current password was incorrect',
+    INCORRECT_USERNAME_PASSWORD: 'Incorrect username or password'
    })

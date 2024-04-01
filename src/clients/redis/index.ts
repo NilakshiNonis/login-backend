@@ -19,7 +19,7 @@ client.on('error', (err) => {
 });
 
 client.on('end', () => {
-    console.log("Client disconnected from Redis.....");
+   // console.log("Client disconnected from Redis.....");
 });
 
 // Gracefully handle process termination
